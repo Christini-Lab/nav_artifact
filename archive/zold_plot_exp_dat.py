@@ -702,9 +702,5 @@ def main():
     cell_031422_004_ch2.plot_all_IV_temp()
     #cell_031422_004_ch2.write_csv_temp()
 
-
-
-
-
 if __name__ == "__main__":
     main()

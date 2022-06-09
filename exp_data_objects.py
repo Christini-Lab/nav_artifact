@@ -559,7 +559,5 @@ class ExpInformation():
             curr_meta.to_csv(f'{new_directory}/{proto_name}_meta.csv', index=False)
 
 
-
-
 if __name__ == "__main__":
     main()
