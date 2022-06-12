@@ -67,7 +67,6 @@ def save_cell(folder, date, exp_num, channel, trial_nums, is_saved=False):
         cell.plot_all_inact_traces()
         cell.plot_all_IV()
         cell.plot_all_inact()
-    
 
 
 #MEDIUM
