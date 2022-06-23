@@ -3,3 +3,4 @@ data/*
 *.swp
 figures/*
 __pycache__/
+.ipynb_checkpoints
