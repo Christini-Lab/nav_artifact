@@ -13,11 +13,12 @@ import pyqtgraph as pg
 
 
 class ExpInformation():
-    def __init__(self, cell_file, meta_path, channel, trials):
+    def __init__(self, cell_file, meta_path, channel, ljp, trials):
         self.cell_file = cell_file 
         self.meta_path = meta_path
         self.channel = channel
         self.trials = trials
+        self.ljp = ljp
 
 
     def plot_all_iv_traces(self, write_to=None):
@@ -66,12 +67,12 @@ class ExpInformation():
             if i>2:
                 ax.set_xlabel('Time (ms)')
             if (i == 0) or (i == 3):
-                ax.set_ylabel('Current (mV)')
+                ax.set_ylabel('Current (nA)')
             #ax.axhline(y=0, color='grey', linestyle='-', lw=.5)
             #ax.set_xlabel('Voltage (mV)', fontsize=18)
             #ax.set_ylabel('Current (nA)', fontsize=18)
 
-        #ax.set_xlim(9, 11)
+        ax.set_xlim(8, 12)
 
         if write_to is not None:
             plt.savefig(write_to)
@@ -124,12 +125,12 @@ class ExpInformation():
             if i>2:
                 ax.set_xlabel('Time (ms)')
             if (i == 0) or (i == 3):
-                ax.set_ylabel('Voltage (mV)')
+                ax.set_ylabel('Current (nA)')
             #ax.axhline(y=0, color='grey', linestyle='-', lw=.5)
             #ax.set_xlabel('Voltage (mV)', fontsize=18)
             #ax.set_ylabel('Current (nA)', fontsize=18)
 
-        #ax.set_xlim(1009, 1011)
+        ax.set_xlim(1008, 1012)
 
         if write_to is not None:
             plt.savefig(write_to)
@@ -160,7 +161,14 @@ class ExpInformation():
 
         for sweep in range(0, num_sweeps):
             dat = bundle.data[0, proto_num, sweep, ch_index]/1E-9
-            nav_peaks.append(np.min(dat))
+            rmp_curr = np.average(dat[200:220]) #average current at RMP
+            min_curr = np.min(dat[200:400])
+            max_curr = np.max(dat[200:400])
+
+            if (max_curr - rmp_curr) > (rmp_curr - min_curr):
+                nav_peaks.append(max_curr)
+            else:
+                nav_peaks.append(min_curr)
 
         currents.append(nav_peaks)
 
@@ -179,11 +187,18 @@ class ExpInformation():
             nav_peaks = []
             for sweep in range(0, num_sweeps):
                 dat = bundle.data[0, proto_num, sweep, ch_index]/1E-9
-                nav_peaks.append(np.min(dat))
+                rmp_curr = np.average(dat[200:220]) #average current at RMP
+                min_curr = np.min(dat[200:400])
+                max_curr = np.max(dat[200:400])
+
+                if (max_curr - rmp_curr) > (rmp_curr - min_curr):
+                    nav_peaks.append(max_curr)
+                else:
+                    nav_peaks.append(min_curr)
                 
             currents.append(nav_peaks)
 
-        voltages = np.linspace(-80, 70, len(currents[0])+1)[:-1]
+        voltages = np.linspace(-80-self.ljp, 90-self.ljp, len(currents[0])+1)[:-1]
 
         fig, ax = plt.subplots(1, 1, figsize=(12, 8))
 
@@ -248,7 +263,7 @@ class ExpInformation():
             all_inact.append(na_inact)
                 
         #COME BACK HERE
-        voltages = np.linspace(-120, -20, len(na_inact)+1)[:-1]
+        voltages = np.linspace(-120-self.ljp, -0-self.ljp, len(na_inact)+1)[:-1]
 
         fig, ax = plt.subplots(1, 1, figsize=(12, 8))
 
@@ -328,7 +343,7 @@ class ExpInformation():
                        'capacitance_pF': [],
                        'rseries_Mohm': [],
                        'rseal_Mohm': []} 
-            voltages = np.linspace(-80, 70, 16)[:-1]
+            voltages = np.linspace(-80, 90, 18)[:-1]
 
             for sweep in range(0, num_sweeps):
                 dat = bundle.data[0, proto_iv, sweep, ch_index]/1E-9
@@ -369,7 +384,7 @@ class ExpInformation():
                        'rseries_Mohm': [],
                        'rseal_Mohm': []} 
 
-            voltages = np.linspace(-120, -20, 11)[:-1]
+            voltages = np.linspace(-120, 0, 13)[:-1]
 
             for sweep in range(0, num_sweeps):
                 dat = bundle.data[0, proto_in, sweep, ch_index]/1E-9

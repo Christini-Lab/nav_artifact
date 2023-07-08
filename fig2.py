@@ -148,9 +148,9 @@ def plot_peak_voltage_correlation():
     meta_dat['peak_v'] = peak_voltages
     meta_dat['peak_i_nApF'] = peak_currs
     meta_dat['peak_i_nA'] =  meta_dat['peak_i_nApF'] * meta_dat['Cm']
-    meta_dat['G_Na'] = np.log10(meta_dat['G_Na'])
+    #meta_dat['G_Na'] = np.log10(meta_dat['G_Na'])
 
-    meta_dat.rename(columns={'G_Na': 'Log10(G_Na)'}, inplace=True)
+    #meta_dat.rename(columns={'G_Na': 'Log10(G_Na)'}, inplace=True)
 
     sns.pairplot(meta_dat, kind='reg', corner=True, height=2)
     plt.show()
@@ -254,9 +254,9 @@ def plot_correlations_iv():
 
 def main():
     #generate_dat(150)
-    #plot_all_models()
+    plot_all_models()
     #plot_param_relationships()
-    plot_peak_voltage_correlation()
+    #plot_peak_voltage_correlation()
     #plot_all_iv()
     #plot_correlations_iv()
 
